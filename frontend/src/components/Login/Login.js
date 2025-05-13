@@ -17,9 +17,9 @@ export default function Login3() {
             const res = await axios.post(
                 `${process.env.REACT_APP_API_URL}/login`,
                 { email, password },
-                { withCredentials: true }  // ✅ important for cookies
+                { withCredentials: true }
             );
-
+            localStorage.setItem("userId",res.data.user._id)
             alert("Login successful");
             setIsAuthenticated(true);
             navigate("/store");
@@ -37,7 +37,6 @@ export default function Login3() {
                 <span className='text-center mb-3 custom-form-color fs-3 fw-bold d-flex justify-content-center'>Login</span>
 
                 <form onSubmit={handleSubmit}>
-                    {/* Email */}
                     <div>
                         <label htmlFor="email" className="mt-3 custom-form-color fw-semibold">
                             Email
@@ -53,7 +52,6 @@ export default function Login3() {
                         />
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label htmlFor="password" className="mt-3 custom-form-color fw-semibold">
                             Password
@@ -69,17 +67,15 @@ export default function Login3() {
                         />
                     </div>
 
-                    {/* Login Button */}
                     <button type="submit" className="btn btn-info w-100 mt-4">
                         Login
                     </button>
                 </form>
 
-                {/* Signup Link */}
                 <span
                     className="btn btn-outline-warning mt-4 d-inline-block w-100 text-dark"
                     style={{ cursor: 'pointer' }}
-                    onClick={() => navigate("/signup")} // ✅ added this
+                    onClick={() => navigate("/signup")}
                 >
                     Do not have an account? Signup
                 </span>

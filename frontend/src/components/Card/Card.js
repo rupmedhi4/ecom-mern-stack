@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './Card.css'
 import { useAuth } from '../../context/Context';
+import axios from 'axios';
 
 export default function Store() {
     const { cartItem, setCartItem,setIsModalOpen,isModalOpen } = useAuth();
@@ -32,23 +33,43 @@ export default function Store() {
         }
     ];
 
-    const addToCartHandler = (id) => {
-        const filterProduct = productsArr.find((item) => item.id === id);
-      
-        // Duplicate check using .find instead of .some
-        const isExist = cartItem.find((item) => item.id === id);
-        if (isExist) {
-          alert("Item already in cart");
-          return;
+const addToCartHandler = async (id) => {
+    const filterProduct = productsArr.find((item) => item.id === id);
+    const isExist = cartItem && cartItem.find((item) => item.productId === id); 
+
+    if (isExist) {
+        alert("Item already in cart");
+        return;
+    }
+
+    try {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            alert("User not logged in!");
+            return;
         }
-      
-        const updatedCart = [...cartItem, filterProduct];
-      
-        localStorage.setItem("cartItem", JSON.stringify(updatedCart));
+
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/cart/data`, {
+            productId: filterProduct.id,
+            title: filterProduct.title,
+            price: filterProduct.price,
+            imageUrl: filterProduct.imageUrl,
+            quantity: 1,
+            userId: userId 
+        });
+
+        console.log(res);
+
+        const updatedCart = [...cartItem, res.data.data];
         setCartItem(updatedCart);
-      };
+
+    } catch (err) {
+        console.error("Failed to add to cart", err);
+    }
+};
+
       
-      console.log(cartItem);
+
       
         
     return (

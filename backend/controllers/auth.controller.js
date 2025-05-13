@@ -84,7 +84,7 @@ const logOut = (req, res) => {
     res.clearCookie("jwt", {
       httpOnly: true,
       sameSite: "Lax",
-      secure: false, // true if you're using HTTPS
+      secure: false, 
     });
     res.status(200).json({ success: true });
   } catch (error) {

@@ -10,23 +10,25 @@ import PrivateRoute from "./PrivateRoute";
 import AuthProtectRoute from "./AuthProtectRoute";
 import ShowingCartItems from "./components/ShowingCartItems/ShowingCartItems";
 import { useAuth } from "./context/Context";
+import ContactUs from "./components/ContactUs/ContactUs";
 
 function App() {
-const {isModalOpen}= useAuth()
+  const { isModalOpen } = useAuth()
   return (
-    <BrowserRouter >
+    <BrowserRouter>
       <Navbar />
       <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/aboutUs" element={<AboutUs />} />
-          <Route path="/store" element={<PrivateRoute><Card /></PrivateRoute>} />
-          <Route path="/login" element={<AuthProtectRoute><Login /></AuthProtectRoute>} />
-          <Route path="/signup" element={<AuthProtectRoute><SignUp /></AuthProtectRoute>} />
-          
+        <Route path="/" element={<Home />} />
+        <Route path="/aboutUs" element={<AboutUs />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/store" element={<PrivateRoute><Card /></PrivateRoute>} />
+        <Route path="/login" element={<AuthProtectRoute><Login /></AuthProtectRoute>} />
+        <Route path="/signup" element={<AuthProtectRoute><SignUp /></AuthProtectRoute>} />
+
       </Routes>
       {
-            isModalOpen ? <ShowingCartItems/>: null
-          }
+        isModalOpen ? <ShowingCartItems /> : null
+      }
       <Footer />
     </BrowserRouter>
   );

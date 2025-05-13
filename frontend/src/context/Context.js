@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null); 
-  const [cartItem, setCartItem] = useState(null);  
+  const [cartItem, setCartItem] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);  
 
   useEffect(() => {
@@ -14,35 +14,46 @@ export const AuthProvider = ({ children }) => {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/check-cookie`, {
           withCredentials: true,
         });
-        if(res.data.success){
-            setIsAuthenticated(true)
+        if (res.data.success) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
         }
-        } catch (error) {
+      } catch (error) {
         setIsAuthenticated(false);
       }
     };
 
     checkAuth();
-    return ()=>checkAuth
-  }, [isAuthenticated,setIsAuthenticated]);
+  }, []);
 
   useEffect(() => {
-    const fetchCartData = () => {
+    const fetchCartData = async () => {
       try {
-        const data = localStorage.getItem("cartItem");
-        const parsedData = data ? JSON.parse(data) : [];
-        setCartItem(parsedData);
-        console.log(parsedData);
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          return;
+        }
+
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/cart/user/${userId}`);
+        console.log("API RESPONSE", response.data.cartItems);
+
+        if (response.status === 200 && response.data.cartItems) {
+          setCartItem(response.data.cartItems);
+        } else {
+          console.warn("Cart not found or invalid data format");
+        }
+
       } catch (error) {
-        console.log("Error reading cart from localStorage:", error);
+        console.error("Error fetching cart data:", error);
       }
     };
-  
+
     fetchCartData();
-  }, []);  // safe to add setCartItem in dependency
-  
+  }, [isAuthenticated]);
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated,setIsAuthenticated,cartItem, setCartItem,isModalOpen, setIsModalOpen }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, cartItem, setCartItem, isModalOpen, setIsModalOpen }}>
       {children}
     </AuthContext.Provider>
   );

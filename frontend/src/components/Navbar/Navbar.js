@@ -5,7 +5,7 @@ import { useAuth } from '../../context/Context';
 import LogOutBtn from './LogOutBtn';
 
 export default function Navbar() {
-  const {isAuthenticated}=useAuth()
+  const { isAuthenticated } = useAuth()
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-black  px-1 ">
 
@@ -21,12 +21,15 @@ export default function Navbar() {
             <li className="nav-item">
               <a className="nav-link text-white" href="/aboutUs">About Us</a>
             </li>
+            <li className="nav-item">
+              <a className="nav-link text-white" href="/contact-us">Contact Us</a>
+            </li>
           </ul>
         </div>
-{
-  isAuthenticated ?<LogOutBtn/>:<NavBtn /> 
-}
-        
+        {
+          isAuthenticated ? <LogOutBtn /> : <NavBtn />
+        }
+
       </div>
 
     </nav>

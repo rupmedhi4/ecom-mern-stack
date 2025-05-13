@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from './../../Modal/Modal';
 import { useAuth } from '../../context/Context';
+import axios from 'axios';
 
 export default function ShowingCartItems() {
     const { setIsModalOpen, isModalOpen, cartItem, setCartItem } = useAuth();
@@ -13,17 +14,27 @@ export default function ShowingCartItems() {
     const total = cartItem.reduce((acc, item) => acc + item.price, 0);
 
     const removeItem = (id) => {
-        const updatedCart = cartItem.filter(item => item.id !== id);
+
+        const updatedCart = cartItem.filter(item => item._id !== id);
         setCartItem(updatedCart);
-        localStorage.setItem("cartItem", JSON.stringify(updatedCart));
     };
 
-    const handlePurchase = () => {
+
+    const handlePurchase = async () => {
         alert("Order successful!");
-        setCartItem([]);
-        localStorage.removeItem("cartItem");
-        setIsModalOpen(false);
+
+        try {
+            const userId = localStorage.getItem("userId")
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/cart/clear/${userId}`)
+            console.log(response.data);
+
+            setCartItem([]);
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Failed to clear cart:", error);
+        }
     };
+
 
     return (
         <Modal>
@@ -47,7 +58,7 @@ export default function ShowingCartItems() {
                     <div className="col-4">${item.price}</div>
                     <div className="col-4 d-flex align-items-center">
                         <span className="me-2">1</span>
-                        <button onClick={() => removeItem(item.id)} className="btn btn-danger btn-sm">Remove</button>
+                        <button onClick={() => removeItem(item._id)} className="btn btn-danger btn-sm">Remove</button>
                     </div>
                 </div>
             ))}

@@ -13,7 +13,13 @@ const userSchema =mongoose.Schema({
   password:{
     type:String,
     required:true
-  }  
+  },
+  cartItems: [
+    { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'CartItem' 
+    } 
+  ]
 })
 
 const User = mongoose.model("User",userSchema)

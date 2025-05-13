@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 
 const authRoute = require("./route/auth.route");
+const contactUsRoute = require('./route/contactUs.route');
+const fetchDataRoute = require('./route/fetchData.route');
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const createTokenAndSaveCookie = require("./jwt/generateToken");
@@ -12,7 +14,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:3000",  
+    origin: "http://localhost:3000",
     credentials: true,
 }));
 
@@ -22,6 +24,8 @@ app.use(cookieParser());
 
 
 app.use("/", authRoute);
+app.use("/contactUs", contactUsRoute);
+app.use("/cart", fetchDataRoute);
 
 
 
