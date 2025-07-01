@@ -32,9 +32,8 @@ export default function SignUp() {
             alert("signup success")
             setIsAuthenticated(true)
             navigate("/store")
-
-
         } catch (error) {
+             alert("Signup Error")
             console.error("Signup Error:", error);
         }
     }
@@ -105,6 +104,7 @@ export default function SignUp() {
                 <span
                     className="btn btn-outline-warning mt-4 d-inline-block w-100 text-dark "
                     style={{ cursor: "pointer" }}
+                    onClick={() => navigate("/login")}
                 >
                     Have an account? Login
                 </span>
