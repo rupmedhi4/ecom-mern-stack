@@ -4,7 +4,7 @@ import { useAuth } from '../../context/Context';
 import axios from 'axios';
 
 export default function Store() {
-    const { cartItem, setCartItem,setIsModalOpen,isModalOpen } = useAuth();
+    const { cartItem, setCartItem, setIsModalOpen, isModalOpen } = useAuth();
 
     const productsArr = [
         {
@@ -33,45 +33,44 @@ export default function Store() {
         }
     ];
 
-const addToCartHandler = async (id) => {
-    const filterProduct = productsArr.find((item) => item.id === id);
-    const isExist = cartItem && cartItem.find((item) => item.productId === id); 
+    const addToCartHandler = async (id) => {
+        const filterProduct = productsArr.find((item) => item.id === id);
+        const isExist = cartItem && cartItem.find((item) => item.productId === id);
 
-    if (isExist) {
-        alert("Item already in cart");
-        return;
-    }
-
-    try {
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-            alert("User not logged in!");
+        if (isExist) {
+            alert("Item already in cart");
             return;
         }
 
-        const res = await axios.post(`${process.env.REACT_APP_API_URL}/cart/data`, {
-            productId: filterProduct.id,
-            title: filterProduct.title,
-            price: filterProduct.price,
-            imageUrl: filterProduct.imageUrl,
-            quantity: 1,
-            userId: userId 
-        });
+        try {
+            const userId = localStorage.getItem("userId");
+            if (!userId) {
+                alert("User not logged in!");
+                return;
+            }
 
-        console.log(res);
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/cart/data`, {
+                productId: filterProduct.id,
+                title: filterProduct.title,
+                price: filterProduct.price,
+                imageUrl: filterProduct.imageUrl,
+                quantity: 1,
+                userId: userId
+            },{
+                withCredentials:true
+            });
 
-        const updatedCart = [...cartItem, res.data.data];
-        setCartItem(updatedCart);
+            console.log(res);
 
-    } catch (err) {
-        console.error("Failed to add to cart", err);
-    }
-};
+            const updatedCart = [...cartItem, res.data.data];
+            setCartItem(updatedCart);
 
-      
+        } catch (err) {
+            console.error("Failed to add to cart", err);
+        }
+    };
 
-      
-        
+
     return (
         <>
             <div className='custom-bg  text-center py-2'>
@@ -91,7 +90,7 @@ const addToCartHandler = async (id) => {
                             </div>
                             <div className='d-flex justify-content-evenly align-items-center gap-3 '>
                                 <span>${item.price}</span>
-                                <button type="button" onClick={()=>addToCartHandler(item.id)} className=" btn-hover btn btn-info text-white fw-bold mt-4 px-4"  >Add to cart</button>
+                                <button type="button" onClick={() => addToCartHandler(item.id)} className=" btn-hover btn btn-info text-white fw-bold mt-4 px-4"  >Add to cart</button>
                             </div>
 
                         </div>
@@ -100,7 +99,7 @@ const addToCartHandler = async (id) => {
 
             </div>
             <div className='d-flex justify-content-center my-58 my-5'>
-                <button type="button" onClick={()=>setIsModalOpen(!isModalOpen)} class="btn btn-primary btn-lg text-white fw-bold " style={{ backgroundColor: "#777" }}>See the cart</button>
+                <button type="button" onClick={() => setIsModalOpen(!isModalOpen)} class="btn btn-primary btn-lg text-white fw-bold " style={{ backgroundColor: "#777" }}>See the cart</button>
             </div>
 
         </>

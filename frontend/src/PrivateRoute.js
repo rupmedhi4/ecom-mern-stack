@@ -5,7 +5,5 @@ import Login from "./components/Login/Login";
 export default function PrivateRoute({ children }) {
   const { isAuthenticated } = useAuth();
 
-
-
   return isAuthenticated ? children : <Login />;
 }

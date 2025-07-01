@@ -4,8 +4,6 @@ import Card from '../src/components/Card/Card'
 
 export default function AuthProtectRoute({ children }) {
   const { isAuthenticated } = useAuth();
-
   
-
   return isAuthenticated ? <Card/> : children;
 }
